@@ -47,6 +47,7 @@ INSTALLED_APPS += [
         'authusers',
         'events',
         'utils',
+        'organisation',
 ]
 
 MIDDLEWARE = [
@@ -153,9 +154,9 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 REST_FRAMEWORK = {
-   'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework_simplejwt.authentication.JWTAuthentication',
-   ),
+#    'DEFAULT_AUTHENTICATION_CLASSES': (
+#        'rest_framework_simplejwt.authentication.JWTAuthentication',
+#    ),
    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
    ),
