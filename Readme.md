@@ -82,7 +82,7 @@ A full-featured Event Management Content Management System designed for event co
 
 1. **Clone Repository**
 bash
-git clone https://github.com/yourusername/eventmaster-pro.git
+git clone https://github.com/Kushaldotel/eventmanagement-apis.git
 cd eventmaster-pro
 
 
