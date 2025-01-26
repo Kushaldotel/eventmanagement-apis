@@ -43,6 +43,10 @@ class SpeakerAdmin(admin.ModelAdmin):
                 'event',
                 'name',
                 'photo',
+                'banner_photo',
+                'address',
+                'phone',
+                'email',
                 'photo_preview',
                 'designation',
                 'organization'

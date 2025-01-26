@@ -8,13 +8,17 @@ class FAQSerializer(serializers.ModelSerializer):
 
 class SpeakerSerializer(serializers.ModelSerializer):
     photo_url = serializers.SerializerMethodField()
-
+    banner_photo_url = serializers.SerializerMethodField()
     class Meta:
         model = Speaker
         fields = [
             'name',
             'bio',
             'photo_url',
+            'banner_photo_url',
+            'address',
+            'phone',
+            'email',
             'designation',
             'organization',
             'socials',
@@ -27,14 +31,20 @@ class SpeakerSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.photo.url)
         return None
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        # Convert socials JSON string to Python dict
-        if instance.socials:
-            representation['socials'] = json.loads(instance.socials)
-        else:
-            representation['socials'] = None
-        return representation
+    def get_banner_photo_url(self, obj):
+        request = self.context.get('request')
+        if obj.banner_photo and hasattr(obj.banner_photo, 'url'):
+            return request.build_absolute_uri(obj.banner_photo.url)
+        return None
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     # Convert socials JSON string to Python dict
+    #     if instance.socials:
+    #         representation['socials'] = json.loads(instance.socials)
+    #     else:
+    #         representation['socials'] = None
+    #     return representation
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

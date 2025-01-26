@@ -62,6 +62,10 @@ class Speaker(models.Model):
     name = models.CharField(max_length=100)
     bio = CKEditor5Field('Bio', config_name='extends')
     photo = models.ImageField(upload_to='speakers/', null=True, blank=True)
+    banner_photo = models.ImageField(upload_to='speakers/', null=True, blank=True)
+    address = models.TextField(null = True, blank = True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     designation = models.CharField(max_length=100)
     organization = models.CharField(max_length=100, blank=True)
     socials = models.JSONField(null=True, blank=True)
@@ -70,17 +74,17 @@ class Speaker(models.Model):
     class Meta:
         ordering = ['order']
 
-    def clean(self):
-        super().clean()
-        if self.socials:
-            try:
-                json.loads(self.socials)
-            except json.JSONDecodeError:
-                raise ValidationError({'socials': 'Invalid JSON format'})
+    # def clean(self):
+    #     super().clean()
+    #     if self.socials:
+    #         try:
+    #             json.loads(self.socials)
+    #         except json.JSONDecodeError:
+    #             raise ValidationError({'socials': 'Invalid JSON format'})
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.full_clean()
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
