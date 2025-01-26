@@ -56,6 +56,7 @@ INSTALLED_APPS += [
         'events',
         'utils',
         'organisation',
+        'aboutus',
 ]
 
 MIDDLEWARE = [

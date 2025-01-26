@@ -4,8 +4,8 @@ import json
 from django_ckeditor_5.widgets import CKEditor5Widget
 from .models import Event, Category, FAQ, Speaker, EventDay, EventSession
 from django.db import models
-from django.contrib.admin import TabularInline, StackedInline
-from unfold.admin import ModelAdmin
+# from django.contrib.admin import TabularInline, StackedInline
+from unfold.admin import ModelAdmin, StackedInline, TabularInline
 # ---------------------------
 # FAQ Admin
 # ---------------------------
@@ -107,7 +107,7 @@ class SpeakerForm(forms.ModelForm):
     #             raise forms.ValidationError("Invalid JSON format. Example: {'twitter':'https://...'}")
     #     return socials
 
-class SpeakerInline(admin.StackedInline):
+class SpeakerInline(StackedInline):
     form = SpeakerForm
     model = Speaker
     extra = 1
