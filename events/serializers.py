@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Category, FAQ, Speaker
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession
 import json
 class FAQSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,11 +50,36 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['name', 'slug']
 
+
+class EventSessionSerializer(serializers.ModelSerializer):
+    speakers = SpeakerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = EventSession
+        fields = [
+            'start_time',
+            'end_time',
+            'title',
+            'description',
+            'session_type',
+            'speakers',
+            'location',
+            'notes'
+        ]
+
+class EventDaySerializer(serializers.ModelSerializer):
+    sessions = EventSessionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = EventDay
+        fields = ['date', 'title', 'sessions']
+
 class EventSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True, read_only=True)
     featured_image_url = serializers.SerializerMethodField()
     faqs = FAQSerializer(many=True, read_only=True)
     speakers = SpeakerSerializer(many=True, read_only=True)
+    days = EventDaySerializer(many=True, read_only=True)
     class Meta:
         model = Event
         fields = [
@@ -80,6 +105,7 @@ class EventSerializer(serializers.ModelSerializer):
             'short_description',
             'faqs',
             'speakers',
+            'days'
         ]
         lookup_field = 'slug'
         extra_kwargs = {

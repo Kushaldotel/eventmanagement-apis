@@ -2,9 +2,9 @@ from django.contrib import admin
 from django import forms
 import json
 from django_ckeditor_5.widgets import CKEditor5Widget
-from .models import Event, Category, FAQ, Speaker
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession
 from django.db import models
-
+from django.contrib.admin import TabularInline, StackedInline
 # ---------------------------
 # FAQ Admin
 # ---------------------------
@@ -120,6 +120,19 @@ class SpeakerInline(admin.StackedInline):
         'order'
     )
 
+class EventSessionInline(TabularInline):
+    model = EventSession
+    extra = 1
+    fields = ('start_time', 'end_time', 'title', 'session_type', 'speakers', 'location', 'day', 'description', 'notes')
+    autocomplete_fields = ['speakers']
+
+class EventDayInline(StackedInline):
+    model = EventDay
+    extra = 1
+    fields = ('date', 'title')
+    inlines = [EventSessionInline]
+    show_change_link = True
+
 # ---------------------------
 # Event Admin Configuration
 # ---------------------------
@@ -135,7 +148,7 @@ class EventAdminForm(forms.ModelForm):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     form = EventAdminForm
-    inlines = [FAQInline, SpeakerInline]
+    inlines = [EventDayInline,FAQInline, SpeakerInline]
     list_display = (
         'title',
         'start_date',
@@ -186,3 +199,17 @@ class EventAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'slug')
+
+@admin.register(EventDay)
+class EventDayAdmin(admin.ModelAdmin):
+    list_display = ('date', 'event', 'title')
+    list_filter = ('event',)
+    inlines = [EventSessionInline]
+    search_fields = ('event__title', 'title')
+
+@admin.register(EventSession)
+class EventSessionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'day', 'start_time', 'end_time', 'session_type')
+    list_filter = ('session_type', 'day__event')
+    search_fields = ('title', 'description')
+    autocomplete_fields = ['speakers', 'day']
