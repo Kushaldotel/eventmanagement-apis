@@ -3,7 +3,11 @@ from .models import Event
 from .serializers import EventSerializer
 
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Event.objects.all().order_by('-start_date')
+    queryset = Event.objects.all().prefetch_related(
+        'categories',
+        'faqs',
+        'speakers'
+    ).order_by('-start_date')
     serializer_class = EventSerializer
     lookup_field = 'slug'
 
