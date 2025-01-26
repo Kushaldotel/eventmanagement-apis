@@ -5,11 +5,12 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 from .models import Event, Category, FAQ, Speaker, EventDay, EventSession
 from django.db import models
 from django.contrib.admin import TabularInline, StackedInline
+from unfold.admin import ModelAdmin
 # ---------------------------
 # FAQ Admin
 # ---------------------------
 @admin.register(FAQ)
-class FAQAdmin(admin.ModelAdmin):
+class FAQAdmin(ModelAdmin):
     list_display = ('question', 'event', 'order')
     list_filter = ('event',)
     search_fields = ('question', 'answer')
@@ -30,7 +31,7 @@ class SpeakerForm(forms.ModelForm):
         }
 
 @admin.register(Speaker)
-class SpeakerAdmin(admin.ModelAdmin):
+class SpeakerAdmin(ModelAdmin):
     form = SpeakerForm
     list_display = ('name', 'event', 'designation', 'organization')
     list_filter = ('event',)
@@ -146,7 +147,7 @@ class EventAdminForm(forms.ModelForm):
         }
 
 @admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(ModelAdmin):
     form = EventAdminForm
     inlines = [EventDayInline,FAQInline, SpeakerInline]
     list_display = (
@@ -196,19 +197,19 @@ class EventAdmin(admin.ModelAdmin):
 # Category Admin
 # ---------------------------
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'slug')
 
 @admin.register(EventDay)
-class EventDayAdmin(admin.ModelAdmin):
+class EventDayAdmin(ModelAdmin):
     list_display = ('date', 'event', 'title')
     list_filter = ('event',)
     inlines = [EventSessionInline]
     search_fields = ('event__title', 'title')
 
 @admin.register(EventSession)
-class EventSessionAdmin(admin.ModelAdmin):
+class EventSessionAdmin(ModelAdmin):
     list_display = ('title', 'day', 'start_time', 'end_time', 'session_type')
     list_filter = ('session_type', 'day__event')
     search_fields = ('title', 'description')

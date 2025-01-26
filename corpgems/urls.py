@@ -20,6 +20,11 @@ from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# change the title from django administration to corp gems
+admin.site.site_header = "Corp Gems Administration"
+# also change the login administration to login into corpgems admin
+admin.site.site_title = "Corp Gems Admin"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authusers.urls')),

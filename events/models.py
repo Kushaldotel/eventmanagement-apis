@@ -11,6 +11,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    # need a verbose name
+    class Meta:
+        verbose_name_plural = 'Categories'
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True,blank=True, max_length=200)
