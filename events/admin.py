@@ -97,14 +97,14 @@ class SpeakerForm(forms.ModelForm):
             }),
         }
 
-    def clean_socials(self):
-        socials = self.cleaned_data.get('socials')
-        if socials:
-            try:
-                json.loads(socials)
-            except json.JSONDecodeError:
-                raise forms.ValidationError("Invalid JSON format. Example: {'twitter':'https://...'}")
-        return socials
+    # def clean_socials(self):
+    #     socials = self.cleaned_data.get('socials')
+    #     if socials:
+    #         try:
+    #             json.loads(socials)
+    #         except json.JSONDecodeError:
+    #             raise forms.ValidationError("Invalid JSON format. Example: {'twitter':'https://...'}")
+    #     return socials
 
 class SpeakerInline(admin.StackedInline):
     form = SpeakerForm
