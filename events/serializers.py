@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Category, FAQ, Speaker, EventDay, EventSession
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument
 import json
 class FAQSerializer(serializers.ModelSerializer):
     class Meta:
@@ -117,3 +117,8 @@ class EventSerializer(serializers.ModelSerializer):
         if obj.featured_image and hasattr(obj.featured_image, 'url'):
             return request.build_absolute_uri(obj.featured_image.url)
         return None
+
+class PolicyDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PolicyDocument
+        fields = '__all__'

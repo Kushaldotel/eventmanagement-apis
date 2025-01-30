@@ -15,21 +15,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls.conf import include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
 # change the title from django administration to corp gems
-admin.site.site_header = "Corp Gems Administration"
+admin.site.site_header = "Corpgems Administration"
 # also change the login administration to login into corpgems admin
-admin.site.site_title = "Corp Gems Admin"
+admin.site.site_title = "Corpgems Admin"
+
+BASE_API_PATH = 'api/v1/'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('authusers.urls')),
-    path('organisation/', include('organisation.urls')),
-    path('api/', include('events.urls')),
-    path('about-us/', include('aboutus.urls')),
+    re_path(rf"^{BASE_API_PATH}", include([
+        path('', include('authusers.urls')),
+        path('organisation/', include('organisation.urls')),
+        path('', include('events.urls')),
+        path('', include('aboutus.urls')),
+    ])),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -133,3 +133,39 @@ class EventSession(models.Model):
     def clean(self):
         if self.end_time <= self.start_time:
             raise ValidationError("End time must be after start time")
+
+class PolicyDocument(models.Model):
+
+    DOCUMENT_TYPES = (
+        ('PRIVACY', 'Privacy Policy'),
+        ('TERMS', 'Terms & Conditions'),
+        ('DISCLAIMER', 'Disclaimer'),
+        ('PAYMENT', 'Payment Policy'),
+        ('COOKIES', 'Cookies Policy'),
+        ('REFUND', 'Refund Policy'),
+        ('CODE_OF_CONDUCT', 'Code of Conduct'),
+        ('SOCIA_MEDIA_MARKEING_POLICY', 'Social Media Marketing Policy'),
+        ("INSURANCE_POLICY", "Insurance Policy"),
+        ('HEALTH_SAFETY_POLICY', 'Health & Safety Policy'),
+    )
+
+    document_type = models.CharField(max_length=40, choices=DOCUMENT_TYPES, unique=True)
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    content = CKEditor5Field(config_name='extends')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    version = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Policy Document'
+        verbose_name_plural = 'Policy Documents'
+
+    def __str__(self):
+        return f"{self.document_type} - {self.title}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)

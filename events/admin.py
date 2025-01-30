@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 import json
 from django_ckeditor_5.widgets import CKEditor5Widget
-from .models import Event, Category, FAQ, Speaker, EventDay, EventSession
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument
 from django.db import models
 # from django.contrib.admin import TabularInline, StackedInline
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
@@ -205,7 +205,7 @@ class CategoryAdmin(ModelAdmin):
 class EventDayAdmin(ModelAdmin):
     list_display = ('date', 'event', 'title')
     list_filter = ('event',)
-    inlines = [EventSessionInline]
+    # inlines = [EventSessionInline]
     search_fields = ('event__title', 'title')
 
 @admin.register(EventSession)
@@ -214,3 +214,32 @@ class EventSessionAdmin(ModelAdmin):
     list_filter = ('session_type', 'day__event')
     search_fields = ('title', 'description')
     autocomplete_fields = ['speakers', 'day']
+
+@admin.register(PolicyDocument)
+class PolicyDocumentAdmin(ModelAdmin):
+    list_display = ('document_type', 'title', 'version',)
+    list_filter = ('document_type',)
+    search_fields = ('title', 'content')
+    readonly_fields = ('created_at', 'updated_at')
+    formfield_overrides = {
+        models.TextField: {'widget': CKEditor5Widget(config_name='extends')}
+    }
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'document_type',
+                'title',
+                'slug',
+                'content',
+                'version',
+            )
+        }),
+        ('Metadata', {
+            'fields': (
+                'created_at',
+                'updated_at'
+            ),
+            'classes': ('collapse',)
+        }),
+    )
