@@ -1,6 +1,7 @@
 from rest_framework import viewsets
-from .models import Event, PolicyDocument
-from .serializers import EventSerializer, PolicyDocumentSerializer, CategorySerializer, FAQSerializer, SpeakerSerializer
+from .models import Event, PolicyDocument, GeneralFAQ
+from .serializers import EventSerializer, PolicyDocumentSerializer, CategorySerializer, FAQSerializer, SpeakerSerializer, GeneralFAQSerializer
+from rest_framework.generics import ListAPIView
 
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Event.objects.all().prefetch_related(
@@ -34,3 +35,17 @@ class PolicyDocumentViewSet(viewsets.ReadOnlyModelViewSet):
         if doc_type:
             queryset = queryset.filter(document_type=doc_type)
         return queryset
+
+
+class GeneralFAQListView(ListAPIView):
+    serializer_class = GeneralFAQSerializer
+
+    def get_queryset(self):
+        queryset = GeneralFAQ.objects.filter(is_active=True)
+
+        # Optional category filtering
+        category = self.request.query_params.get('category', None)
+        if category:
+            queryset = queryset.filter(category__iexact=category)
+
+        return queryset.order_by('order')

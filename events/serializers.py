@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument, GeneralFAQ
 import json
 class FAQSerializer(serializers.ModelSerializer):
     class Meta:
@@ -122,3 +122,15 @@ class PolicyDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PolicyDocument
         fields = '__all__'
+
+class GeneralFAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeneralFAQ
+        fields = [
+            'id',
+            'question',
+            'answer',
+            'category',
+            'order',
+            'created_at'
+        ]

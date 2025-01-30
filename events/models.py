@@ -169,3 +169,20 @@ class PolicyDocument(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+class GeneralFAQ(models.Model):
+    question = models.CharField(max_length=255)
+    answer = CKEditor5Field(config_name='extends')
+    category = models.CharField(max_length=100, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = 'General FAQ'
+        verbose_name_plural = 'General FAQs'
+
+    def __str__(self):
+        return self.question

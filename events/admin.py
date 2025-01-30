@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 import json
 from django_ckeditor_5.widgets import CKEditor5Widget
-from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument, GeneralFAQ
 from django.db import models
 # from django.contrib.admin import TabularInline, StackedInline
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
@@ -241,5 +241,27 @@ class PolicyDocumentAdmin(ModelAdmin):
                 'updated_at'
             ),
             'classes': ('collapse',)
+        }),
+    )
+
+@admin.register(GeneralFAQ)
+class GeneralFAQAdmin(ModelAdmin):
+    list_display = ('question', 'category', 'order', 'is_active')
+    list_filter = ('category', 'is_active')
+    search_fields = ('question', 'answer')
+    list_editable = ('order', 'is_active')
+    formfield_overrides = {
+        models.TextField: {'widget': CKEditor5Widget(config_name='extends')}
+    }
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'question',
+                'answer',
+                'category',
+                'order',
+                'is_active'
+            )
         }),
     )
