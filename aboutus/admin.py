@@ -2,7 +2,7 @@ from django import forms
 from django.utils.html import format_html
 from django_ckeditor_5.widgets import CKEditor5Widget
 from django.contrib import admin
-from .models import AboutUsSection, TeamMember
+from .models import AboutUsSection, TeamMember, ContactSubmission
 from django.db import models
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 
@@ -70,3 +70,25 @@ class TeamMemberAdmin(ModelAdmin):
             )
         return "No photo"
     photo_preview.short_description = 'Preview'
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+    list_filter = ('subject', 'created_at')
+    search_fields = ('name', 'email', 'message')
+    readonly_fields = ('created_at',)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'email',
+                'subject',
+                'message',
+            )
+        }),
+        ('Metadata', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )

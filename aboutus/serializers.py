@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import AboutUsSection, TeamMember
+from .models import AboutUsSection, TeamMember, ContactSubmission
+from django.core.mail import send_mail
+from django.conf import settings
 
 class TeamMemberSerializer(serializers.ModelSerializer):
     photo_url = serializers.SerializerMethodField()
@@ -44,3 +46,25 @@ class AboutUsSectionSerializer(serializers.ModelSerializer):
         if obj.image and hasattr(obj.image, 'url'):
             return request.build_absolute_uri(obj.image.url)
         return None
+
+class ContactSubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactSubmission
+        fields = '__all__'  # Include all fields
+
+    def create(self, validated_data):
+        # Save the submission
+        contact_submission = ContactSubmission.objects.create(**validated_data)
+
+        # Send an email notification
+        subject = validated_data['subject']
+        message = f"Name: {validated_data['name']}\nEmail: {validated_data['email']}\n\nMessage:\n{validated_data['message']}"
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,  # Replace with your email
+            [settings.EMAIL_HOST_USER],  # List of recipients
+            fail_silently=False,
+        )
+
+        return contact_submission
