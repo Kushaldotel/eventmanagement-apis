@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument, GeneralFAQ
+from .models import Event, Category, FAQ, Speaker, EventDay, EventSession, PolicyDocument, GeneralFAQ, Purchase
 import json
 class FAQSerializer(serializers.ModelSerializer):
     class Meta:
@@ -83,6 +83,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
+            'id',
             'title',
             'slug',
             'description',
@@ -133,4 +134,23 @@ class GeneralFAQSerializer(serializers.ModelSerializer):
             'category',
             'order',
             'created_at'
+        ]
+
+
+class PurchaseEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = [
+            'id', 'title', 'slug', 'event_fee', 'is_registration_open',
+            'start_date', 'end_date', 'location'
+        ]
+
+class PurchaseSerializer(serializers.ModelSerializer):
+    event = PurchaseEventSerializer(read_only=True)
+
+    class Meta:
+        model = Purchase
+        fields = [
+            'id', 'event', 'customer_name', 'customer_email',
+            'amount_paid', 'is_paid', 'created_at'
         ]

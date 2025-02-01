@@ -186,3 +186,15 @@ class GeneralFAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+class Purchase(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='purchases')
+    customer_name = models.CharField(max_length=100)
+    customer_email = models.EmailField()
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    stripe_payment_intent_id = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.customer_name} - {self.event.title}"
